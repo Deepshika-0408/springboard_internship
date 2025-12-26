@@ -1,0 +1,360 @@
+/* --- GOOGLE / MATERIAL DESIGN RESET --- */
+:root {
+    --google-blue: #1a73e8;
+    --google-blue-hover: #1557b0;
+    --google-gray: #5f6368;
+    --google-light-gray: #f1f3f4;
+    --google-border: #dadce0;
+    --text-primary: #202124;
+    --bg-color: #ffffff;
+    --shadow-1: 0 1px 3px rgba(60, 64, 67, 0.3);
+    --shadow-2: 0 4px 6px rgba(60, 64, 67, 0.15);
+    --radius: 8px;
+}
+
+body {
+    margin: 0;
+    font-family: 'Roboto', -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+    background-color: #fff;
+    color: var(--text-primary);
+    line-height: 1.5;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* --- HIDE SCI-FI ELEMENTS --- */
+/* We hide these to get the clean Google look */
+.bg, .grid, .particles, .laser, .corner {
+    display: none !important;
+}
+
+/* --- LAYOUT --- */
+.app {
+    max-width: 800px;
+    width: 90%;
+    margin: 0 auto;
+    padding-top: 60px;
+    flex: 1;
+}
+
+/* --- TYPOGRAPHY --- */
+h1.title {
+    text-align: center;
+    font-family: 'Product Sans', 'Roboto', Arial, sans-serif; /* Google Branding Font */
+    font-size: 2.5rem;
+    font-weight: 400;
+    color: var(--text-primary);
+    margin-bottom: 2rem;
+    letter-spacing: -0.5px;
+}
+
+h1.title span {
+    /* Mimic Google Logo Colors optionally, or keep it clean dark grey */
+    background: none; 
+    -webkit-text-fill-color: initial;
+    text-shadow: none;
+}
+
+h2 {
+    font-size: 1rem;
+    color: var(--google-gray);
+    font-weight: 500;
+    margin: 0 0 12px 0;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* --- INPUT VIEW (Search Style) --- */
+.input-view {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transition: opacity 0.3s ease;
+}
+
+.input-view.hidden {
+    display: none;
+}
+
+.input-card {
+    width: 100%;
+    max-width: 600px;
+    background: #fff;
+    border: 1px solid var(--google-border);
+    border-radius: 24px; /* Pill shape like Google Search */
+    box-shadow: 0 1px 6px rgba(32, 33, 36, 0.28);
+    padding: 10px;
+    transition: box-shadow 0.2s ease;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+}
+
+.input-card:hover, .input-card:focus-within {
+    box-shadow: 0 4px 12px rgba(32, 33, 36, 0.18);
+    border-color: transparent;
+}
+
+textarea {
+    width: 100%;
+    border: none;
+    outline: none;
+    resize: none;
+    font-family: inherit;
+    font-size: 1rem;
+    color: var(--text-primary);
+    padding: 12px 20px;
+    min-height: 100px;
+    box-sizing: border-box;
+    background: transparent;
+}
+
+textarea::placeholder {
+    color: #9aa0a6;
+}
+
+/* --- BUTTONS --- */
+button {
+    cursor: pointer;
+    font-family: 'Google Sans', 'Roboto', Arial, sans-serif;
+    font-weight: 500;
+    border: none;
+    transition: background 0.2s;
+}
+
+.epic-btn {
+    background-color: var(--google-light-gray);
+    color: var(--text-primary);
+    padding: 0 24px;
+    height: 36px;
+    border-radius: 4px;
+    align-self: flex-end;
+    margin: 0 10px 10px 0;
+    font-size: 14px;
+}
+
+.epic-btn:hover {
+    background-color: #e8eaed;
+    box-shadow: 0 1px 1px rgba(0,0,0,0.1);
+}
+
+.epic-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* Primary Action Button Style override */
+.epic-btn {
+    background-color: var(--google-blue);
+    color: white;
+}
+.epic-btn:hover {
+    background-color: var(--google-blue-hover);
+    box-shadow: 0 1px 2px rgba(60,64,67,0.3);
+}
+
+/* --- RESULTS VIEW (Card Style) --- */
+.results-view {
+    display: none;
+    opacity: 0;
+    animation: fadeIn 0.4s forwards;
+}
+
+.results-view.show {
+    display: block;
+}
+
+.results-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.success-badge {
+    background-color: #e6f4ea;
+    color: #137333;
+    padding: 6px 12px;
+    border-radius: 16px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+}
+
+.new-test-btn {
+    background: transparent;
+    color: var(--google-blue);
+    padding: 8px 16px;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+.new-test-btn:hover {
+    background-color: rgba(26, 115, 232, 0.04);
+}
+
+.result-card {
+    background: #fff;
+    border: 1px solid var(--google-border);
+    border-radius: var(--radius);
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+/* --- ACTIONS LIST --- */
+#actions {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.action {
+    display: flex;
+    align-items: center;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--google-light-gray);
+}
+
+.action:last-child {
+    border-bottom: none;
+}
+
+.action-num {
+    background-color: var(--google-light-gray);
+    color: var(--google-gray);
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    margin-right: 12px;
+}
+
+.action-text {
+    font-size: 14px;
+    color: var(--text-primary);
+}
+
+.action-text em {
+    color: var(--google-blue);
+    font-style: normal;
+    background: #e8f0fe;
+    padding: 2px 4px;
+    border-radius: 2px;
+}
+
+/* --- CODE BLOCK --- */
+.code-wrap {
+    background-color: #f8f9fa; /* Very light gray */
+    border-radius: 4px;
+    border: 1px solid var(--google-border);
+    overflow: hidden;
+}
+
+.code-header {
+    background-color: #fff;
+    border-bottom: 1px solid var(--google-border);
+    padding: 8px 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 12px;
+    color: var(--google-gray);
+    font-family: 'Roboto Mono', monospace;
+}
+
+.copy-btn {
+    color: var(--google-blue);
+    background: none;
+    font-size: 12px;
+}
+
+pre#code {
+    margin: 0;
+    padding: 16px;
+    font-family: 'Roboto Mono', monospace;
+    font-size: 13px;
+    color: #24292e;
+    overflow-x: auto;
+    white-space: pre-wrap;
+}
+
+/* --- ASSERTIONS --- */
+.assert {
+    display: flex;
+    align-items: flex-start;
+    padding: 8px 0;
+}
+
+.assert-check {
+    color: #1e8e3e; /* Google Green */
+    margin-right: 10px;
+    font-weight: bold;
+}
+
+/* --- LOADING --- */
+.loading {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: white;
+    padding: 24px 48px;
+    border-radius: 8px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+    flex-direction: column;
+    align-items: center;
+    z-index: 100;
+}
+
+.loading.show {
+    display: flex;
+}
+
+.loader {
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid var(--google-blue);
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    animation: spin 1s linear infinite;
+    margin-bottom: 16px;
+}
+
+.loading p {
+    margin: 0;
+    font-size: 14px;
+    color: var(--google-gray);
+    font-weight: 500;
+}
+
+/* --- FOOTER --- */
+footer {
+    text-align: center;
+    padding: 20px;
+    font-size: 12px;
+    color: #9aa0a6;
+    border-top: 1px solid var(--google-border);
+    margin-top: auto;
+}
+
+/* --- ANIMATIONS --- */
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 600px) {
+    .app { padding-top: 20px; }
+    h1.title { font-size: 2rem; }
+}

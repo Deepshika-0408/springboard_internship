@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Web Testing Agent</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Exo+2:wght@400;500;600&display=swap"
+        rel="stylesheet">
+    <style>
+        /* --- GOOGLE / MATERIAL DESIGN RESET --- */
+:root {
+    --google-blue: #1a73e8;
+    --google-blue-hover: #1557b0;
+    --google-gray: #5f6368;
+    --google-light-gray: #f1f3f4;
+    --google-border: #dadce0;
+    --text-primary: #202124;
+    --bg-color: #ffffff;
+    --shadow-1: 0 1px 3px rgba(60, 64, 67, 0.3);
+    --shadow-2: 0 4px 6px rgba(60, 64, 67, 0.15);
+    --radius: 8px;
+}
+
+body {
+    margin: 0;
+    font-family: 'Roboto', -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+    background-color: #fff;
+    color: var(--text-primary);
+    line-height: 1.5;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* --- HIDE SCI-FI ELEMENTS --- */
+/* We hide these to get the clean Google look */
+.bg, .grid, .particles, .laser, .corner {
+    display: none !important;
+}
+
+/* --- LAYOUT --- */
+.app {
+    max-width: 800px;
+    width: 90%;
+    margin: 0 auto;
+    padding-top: 60px;
+    flex: 1;
+}
+
+/* --- TYPOGRAPHY --- */
+h1.title {
+    text-align: center;
+    font-family: 'Product Sans', 'Roboto', Arial, sans-serif; /* Google Branding Font */
+    font-size: 2.5rem;
+    font-weight: 400;
+    color: var(--text-primary);
+    margin-bottom: 2rem;
+    letter-spacing: -0.5px;
+}
+
+h1.title span {
+    /* Mimic Google Logo Colors optionally, or keep it clean dark grey */
+    background: none; 
+    -webkit-text-fill-color: initial;
+    text-shadow: none;
+}
+
+h2 {
+    font-size: 1rem;
+    color: var(--google-gray);
+    font-weight: 500;
+    margin: 0 0 12px 0;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* --- INPUT VIEW (Search Style) --- */
+.input-view {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transition: opacity 0.3s ease;
+}
+
+.input-view.hidden {
+    display: none;
+}
+
+.input-card {
+    width: 100%;
+    max-width: 600px;
+    background: #fff;
+    border: 1px solid var(--google-border);
+    border-radius: 24px; /* Pill shape like Google Search */
+    box-shadow: 0 1px 6px rgba(32, 33, 36, 0.28);
+    padding: 10px;
+    transition: box-shadow 0.2s ease;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+}
+
+.input-card:hover, .input-card:focus-within {
+    box-shadow: 0 4px 12px rgba(32, 33, 36, 0.18);
+    border-color: transparent;
+}
+
+textarea {
+    width: 100%;
+    border: none;
+    outline: none;
+    resize: none;
+    font-family: inherit;
+    font-size: 1rem;
+    color: var(--text-primary);
+    padding: 12px 20px;
+    min-height: 100px;
+    box-sizing: border-box;
+    background: transparent;
+}
+
+textarea::placeholder {
+    color: #9aa0a6;
+}
+
+/* --- BUTTONS --- */
+button {
+    cursor: pointer;
+    font-family: 'Google Sans', 'Roboto', Arial, sans-serif;
+    font-weight: 500;
+    border: none;
+    transition: background 0.2s;
+}
+
+.epic-btn {
+    background-color: var(--google-light-gray);
+    color: var(--text-primary);
+    padding: 0 24px;
+    height: 36px;
+    border-radius: 4px;
+    align-self: flex-end;
+    margin: 0 10px 10px 0;
+    font-size: 14px;
+}
+
+.epic-btn:hover {
+    background-color: #e8eaed;
+    box-shadow: 0 1px 1px rgba(0,0,0,0.1);
+}
+
+.epic-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* Primary Action Button Style override */
+.epic-btn {
+    background-color: var(--google-blue);
+    color: white;
+}
+.epic-btn:hover {
+    background-color: var(--google-blue-hover);
+    box-shadow: 0 1px 2px rgba(60,64,67,0.3);
+}
+
+/* --- RESULTS VIEW (Card Style) --- */
+.results-view {
+    display: none;
+    opacity: 0;
+    animation: fadeIn 0.4s forwards;
+}
+
+.results-view.show {
+    display: block;
+}
+
+.results-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.success-badge {
+    background-color: #e6f4ea;
+    color: #137333;
+    padding: 6px 12px;
+    border-radius: 16px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+}
+
+.new-test-btn {
+    background: transparent;
+    color: var(--google-blue);
+    padding: 8px 16px;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+.new-test-btn:hover {
+    background-color: rgba(26, 115, 232, 0.04);
+}
+
+.result-card {
+    background: #fff;
+    border: 1px solid var(--google-border);
+    border-radius: var(--radius);
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+/* --- ACTIONS LIST --- */
+#actions {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.action {
+    display: flex;
+    align-items: center;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--google-light-gray);
+}
+
+.action:last-child {
+    border-bottom: none;
+}
+
+.action-num {
+    background-color: var(--google-light-gray);
+    color: var(--google-gray);
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    margin-right: 12px;
+}
+
+.action-text {
+    font-size: 14px;
+    color: var(--text-primary);
+}
+
+.action-text em {
+    color: var(--google-blue);
+    font-style: normal;
+    background: #e8f0fe;
+    padding: 2px 4px;
+    border-radius: 2px;
+}
+
+/* --- CODE BLOCK --- */
+.code-wrap {
+    background-color: #f8f9fa; /* Very light gray */
+    border-radius: 4px;
+    border: 1px solid var(--google-border);
+    overflow: hidden;
+}
+
+.code-header {
+    background-color: #fff;
+    border-bottom: 1px solid var(--google-border);
+    padding: 8px 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 12px;
+    color: var(--google-gray);
+    font-family: 'Roboto Mono', monospace;
+}
+
+.copy-btn {
+    color: var(--google-blue);
+    background: none;
+    font-size: 12px;
+}
+
+pre#code {
+    margin: 0;
+    padding: 16px;
+    font-family: 'Roboto Mono', monospace;
+    font-size: 13px;
+    color: #24292e;
+    overflow-x: auto;
+    white-space: pre-wrap;
+}
+
+/* --- ASSERTIONS --- */
+.assert {
+    display: flex;
+    align-items: flex-start;
+    padding: 8px 0;
+}
+
+.assert-check {
+    color: #1e8e3e; /* Google Green */
+    margin-right: 10px;
+    font-weight: bold;
+}
+
+/* --- LOADING --- */
+.loading {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: white;
+    padding: 24px 48px;
+    border-radius: 8px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+    flex-direction: column;
+    align-items: center;
+    z-index: 100;
+}
+
+.loading.show {
+    display: flex;
+}
+
+.loader {
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid var(--google-blue);
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    animation: spin 1s linear infinite;
+    margin-bottom: 16px;
+}
+
+.loading p {
+    margin: 0;
+    font-size: 14px;
+    color: var(--google-gray);
+    font-weight: 500;
+}
+
+/* --- FOOTER --- */
+footer {
+    text-align: center;
+    padding: 20px;
+    font-size: 12px;
+    color: #9aa0a6;
+    border-top: 1px solid var(--google-border);
+    margin-top: auto;
+}
+
+/* --- ANIMATIONS --- */
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 600px) {
+    .app { padding-top: 20px; }
+    h1.title { font-size: 2rem; }
+}
+    </style>
+</head>
+
+<body>
+    <div class="bg"></div>
+    <div class="grid"></div>
+    <div class="particles">
+        <div class="particle" style="left:5%; animation-delay:0s;"></div>
+        <div class="particle" style="left:15%; animation-delay:0.5s;"></div>
+        <div class="particle" style="left:25%; animation-delay:1s;"></div>
+        <div class="particle" style="left:35%; animation-delay:1.5s;"></div>
+        <div class="particle" style="left:45%; animation-delay:2s;"></div>
+        <div class="particle" style="left:55%; animation-delay:2.5s;"></div>
+        <div class="particle" style="left:65%; animation-delay:3s;"></div>
+        <div class="particle" style="left:75%; animation-delay:3.5s;"></div>
+        <div class="particle" style="left:85%; animation-delay:4s;"></div>
+        <div class="particle" style="left:95%; animation-delay:4.5s;"></div>
+    </div>
+    <div class="laser laser1"></div>
+    <div class="laser laser2"></div>
+    <div class="laser laser3"></div>
+
+    <div class="app">
+        <!-- INPUT VIEW -->
+        <div class="input-view" id="inputView">
+            <h1 class="title"><span>AI Web Testing Agent</span></h1>
+
+            <div class="input-card">
+                <div class="corner tl"></div>
+                <div class="corner tr"></div>
+                <div class="corner bl"></div>
+                <div class="corner br"></div>
+                <textarea id="input"
+                    placeholder="Enter your test instruction...&#10;&#10;Example: Open the home page and click login button"></textarea>
+                <button class="epic-btn" id="btn" onclick="run()">⚡ EXECUTE</button>
+            </div>
+        </div>
+
+        <!-- RESULTS VIEW -->
+        <div class="results-view" id="resultsView">
+            <div class="results-header">
+                <div class="success-badge">TEST GENERATED</div>
+                <button class="new-test-btn" onclick="reset()">↺ NEW TEST</button>
+            </div>
+
+            <div class="result-card">
+                <h2>🎯 PARSED ACTIONS <span id="actCount">0</span></h2>
+                <div id="actions"></div>
+            </div>
+
+            <div class="result-card">
+                <h2>💻 PLAYWRIGHT CODE</h2>
+                <div class="code-wrap">
+                    <div class="code-header">
+                        <span>test_script.py</span>
+                        <button class="copy-btn" onclick="copy()">COPY</button>
+                    </div>
+                    <pre id="code"></pre>
+                </div>
+            </div>
+
+            <div class="result-card">
+                <h2>✅ ASSERTIONS <span id="assCount">0</span></h2>
+                <div id="asserts"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="loading" id="loading">
+        <div class="loader"></div>
+        <p>PROCESSING</p>
+    </div>
+
+    <div class="error" id="error"></div>
+
+    <footer>FLASK // LANGGRAPH // PLAYWRIGHT</footer>
+
+    <script>
+        async function run() {
+            const input = document.getElementById('input').value.trim();
+            if (!input) { document.getElementById('input').focus(); return; }
+
+            document.getElementById('loading').classList.add('show');
+            document.getElementById('btn').disabled = true;
+
+            try {
+                const res = await fetch('/test', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ instruction: input })
+                });
+
+                const data = await res.json();
+                document.getElementById('loading').classList.remove('show');
+
+                if (data.status === 'success') {
+                    showResults(data);
+                } else {
+                    alert(data.message || 'Error');
+                    document.getElementById('btn').disabled = false;
+                }
+            } catch (e) {
+                document.getElementById('loading').classList.remove('show');
+                alert('Connection error');
+                document.getElementById('btn').disabled = false;
+            }
+        }
+
+        function showResults(data) {
+            // Hide input, show results
+            document.getElementById('inputView').classList.add('hidden');
+            document.getElementById('resultsView').classList.add('show');
+
+            const actions = data.parsed_actions || [];
+            const assertions = data.assertions || [];
+
+            document.getElementById('actCount').textContent = actions.length;
+            document.getElementById('actions').innerHTML = actions.length
+                ? actions.map((a, i) => `
+                    <div class="action">
+                        <div class="action-num">${i + 1}</div>
+                        <div class="action-text">
+                            <strong>${icon(a.action)} ${a.action.toUpperCase().replace(/_/g, ' ')}</strong>
+                            ${a.target}${a.value ? ` <em>"${a.value}"</em>` : ''}
+                        </div>
+                    </div>
+                `).join('')
+                : '<p class="empty">No actions</p>';
+
+            document.getElementById('code').textContent = data.generated_code || '# No code';
+
+            document.getElementById('assCount').textContent = assertions.length;
+            document.getElementById('asserts').innerHTML = assertions.length
+                ? assertions.map(a => `
+                    <div class="assert">
+                        <div class="assert-check">✓</div>
+                        <div><strong>${a.type}</strong>${a.description}</div>
+                    </div>
+                `).join('')
+                : '<p class="empty">No assertions</p>';
+        }
+
+        function icon(a) {
+            return { 'open_page': '🌐', 'enter_text': '⌨️', 'click': '👆', 'verify': '🔍', 'wait': '⏱️' }[a] || '▶️';
+        }
+
+        function reset() {
+            document.getElementById('resultsView').classList.remove('show');
+            document.getElementById('inputView').classList.remove('hidden');
+            document.getElementById('input').value = '';
+            document.getElementById('btn').disabled = false;
+        }
+
+        function copy() {
+            navigator.clipboard.writeText(document.getElementById('code').textContent);
+            document.querySelector('.copy-btn').textContent = '✓ COPIED';
+            setTimeout(() => document.querySelector('.copy-btn').textContent = 'COPY', 2000);
+        }
+
+        document.getElementById('input').addEventListener('keydown', e => {
+            if (e.ctrlKey && e.key === 'Enter') run();
+        });
+    </script>
+</body>
+
+</html>
